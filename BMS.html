@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        
+      /* Container styles */
+      .container {
+        background-color: #f2dede;
+        box-shadow: 2px 2px 5px #888888;
+        padding: 10px;
+        border-radius: 10px;
+        margin: 10px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* Parent container styles */
+      .parent-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      /* Responsive design */
+      @media only screen and (max-width: 767px) {
+        .parent-container {
+          flex-direction: column;
+          align-items: center;
+        }
+        .container {
+          margin: 5px;
+        }
+        h1 {
+          font-size: 1.2rem;
+        }
+      }
+
+      @media only screen and (min-width: 768px) and (max-width: 991px) {
+        .container {
+          margin: 7px;
+        }
+        h1 {
+          font-size: 1.5rem;
+        }
+      }
+
+      @media only screen and (min-width: 992px) {
+        .container {
+          margin: 10px;
+        }
+        h1 {
+          font-size: 2rem;
+        }
+      }
+
+      /* Title styles */
+      .title {
+        font-family: Arial, sans-serif;
+        font-size: 2rem;
+        font-weight: bold;
+        color: #007bff;
+        text-align: center;
+        margin-top: 20px;
+      }
+    </style>
+    <script>
+      function updateData() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            var data = JSON.parse(this.responseText);
+            document.getElementById('analog1').innerHTML = data.analogValue1;
+            document.getElementById('analog2').innerHTML = data.analogValue2;
+            document.getElementById('relayStatus').innerHTML = data.relayStatus;
+          }
+        };
+        xhttp.open('GET', '/data', true);
+        xhttp.send();
+      }
+      function toggleRelay() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            updateData();
+          }
+        };
+        xhttp.open('GET', '/toggle', true);
+        xhttp.send();
+      }
+      setInterval(updateData, 1000);
+    </script>
+  </head>
+  <body>
+    <div class="title">ELECEPS Battery Monitoring System</div>
+    <div class="parent-container">
+      <div class="container">
+        <h1>Input Voltage:</h1>
+        <p>Analog Input 1: <span id='analog1'></span></p>
+      </div>
+
+      <div class="container">
+        <h1>Output Inverter Voltage:</h1>
+        <p>Analog Input 2: <span id='analog2'></span></p>
+      </div>
+
+      <div class="container">
+        <h1>Relay:</h1>
+        <button onclick='toggleRelay()'>Toggle Relay</button><br>
+        <p>Relay Status: <span id='relayStatus'></span></p>
+      </div>
+    </div>
+  </body>
+</html>
